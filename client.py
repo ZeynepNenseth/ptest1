@@ -1,6 +1,7 @@
 import socket
 import sys
 from bots import alice, bob, musti, hellokitty
+import time
 
 
 userList = ["alice", "bob", "musti", "hellokitty"]
@@ -35,14 +36,17 @@ def bot(data):  # does not work if I put write message instead of data
         activity = words[14].rstrip("ing")
 
         if username == userList[0]:
-            alice(activity)
             client_socket.send(alice(activity).encode())
+            time.sleep(0.5)  # bør jeg ha for at de skal gå i rekkefølge
         elif username == userList[1]:
-            bob(activity)
+            client_socket.send(bob(activity).encode())
+            time.sleep(0.5)
         elif username == userList[2]:
-            musti(activity)
+            client_socket.send(musti(activity).encode())
+            time.sleep(0.5)
         else:
-            hellokitty(activity)
+            client_socket.send(hellokitty(activity).encode())
+            time.sleep(0.5)
 
 
 username = input("Choose your username: alice, bob, musti, hellokitty\n")

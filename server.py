@@ -92,8 +92,8 @@ def handleConnections():
                 client_socket.send("Please choose another username: ".encode())
                 print("server fikk username ", username, "fra client")
 
-        if len(clientList) == 2:
-            print("Start")
+        if len(clientList) == 2: # husk å endre tilbake til 4
+            print("Opening the chat room")
             broadcast("Chat room is ready to start!", server_socket)
             time.sleep(0.2)
 
