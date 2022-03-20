@@ -1,5 +1,6 @@
 import socket
 import sys
+from bots import alice, bob, musti, hellokitty
 
 
 userList = ["alice", "bob", "musti", "hellokitty"]
@@ -17,22 +18,32 @@ try:
 except Exception as e:
     print("Please start the server first!")
 
-def wait(): #  keeps the client connection open
+
+def wait():  # keeps the client connection open
     while True:
         try:
             message = client_socket.recv(1024).decode()
             print(message)
-            bot()
+            bot(message)
         except:
             client_socket.close()
-def bot():
-    print("xxx")
+
+
+def bot(data):  # does not work if I put write message instead of data
     if data.startswith("Host: "):
         words = data.split()
-        activity = words[1]
+        activity = words[14].rstrip("ing")
 
+        if username == userList[0]:
+            alice(activity)
+            client_socket.send(alice(activity).encode())
+        elif username == userList[1]:
+            bob(activity)
+        elif username == userList[2]:
+            musti(activity)
+        else:
+            hellokitty(activity)
 
-# send /receive metode
 
 username = input("Choose your username: alice, bob, musti, hellokitty\n")
 while username.lower() not in userList:  #  and username.lower() not in usernameList:
@@ -43,7 +54,7 @@ data = client_socket.recv(1024).decode()  # her får clienten velkommen melding 
 print(data, username.lower(), "!")
 
 wait()
-bot()
+
 
 
 

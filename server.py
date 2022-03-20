@@ -3,7 +3,7 @@ import sys
 import threading
 import random
 import time
-from bots import all_actionList
+from bots import all_actionList, extra_actionList, good_actionList
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 port = 26246
@@ -21,7 +21,8 @@ print("Waiting for connections")
 
 clientList = []
 usernameList = []
-action = random.choice(all_actionList)
+action1 = random.choice(all_actionList)
+action2 = random.choice(extra_actionList)
 
 
 def broadcast(message, sender):
@@ -34,26 +35,27 @@ def broadcast(message, sender):
     time.sleep(0.2)
 
 
-def process(sock):
-    while True:
-        try:
-            message = sock.recv(1024)
-            broadcast(message)
-        except:  # removes clients/username
-            index = clientList.index(sock)
-            clientList.remove(sock)
-            sock.close()
-            username2 = usernameList[index]
-            broadcast(f"{username2} has left the chat!".encode())
-            usernameList.remove(username2)
-            break
+# def process(sock):
+    # while True:
+        # try:
+          #  message = sock.recv(1024)
+          #  broadcast(message)
+     #   except:  # removes clients/username
+       #     index = clientList.index(sock)
+          #  clientList.remove(sock)
+        #    sock.close()
+         #   username2 = usernameList[index]
+         #   broadcast(f"{username2} has left the chat!".encode())
+
+       #     usernameList.remove(username2)
+        #    break
 
 
 # starts the chat initiated from the host when all 4 clients are connected
-def chat():  # while True:?
-    message = "Host: " + action
-    print(action)
-    #  message = ("Host: Hi everyone! It's a beautiful day. Shall we today?")
+def chat():  # hva med 2 aktiviteter
+
+    message = "Host: Hi everyone! It's a beautiful day. Would you like to join me for " + action1 + "ing today?"
+    print(message)
 
     for client in clientList:
         client.send(message.encode())
@@ -74,7 +76,6 @@ def endAllConnections():
 def handleConnections():
     while len(clientList) < 4:
         while True:
-        #try:
             client_socket, client_address = server_socket.accept()
             print("Client connected:", {str(client_address)})
             username = client_socket.recv(1024).decode()
@@ -90,10 +91,8 @@ def handleConnections():
             else:
                 client_socket.send("Please choose another username: ".encode())
                 print("server fikk username ", username, "fra client")
-       # except:
 
-
-        if len(clientList) == 4:
+        if len(clientList) == 2:
             print("Start")
             broadcast("Chat room is ready to start!", server_socket)
             time.sleep(0.2)
